@@ -1,6 +1,6 @@
 pipeline {
   environment {
-    registry = "buildarium/bdweb-static"
+    registry = "buildarium/bdapi-docs"
     registryCredential = 'dockerhub'
     dockerImage = ''
   }
