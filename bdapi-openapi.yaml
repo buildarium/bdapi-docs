@@ -1,0 +1,168 @@
+openapi: 3.0.0
+servers:
+  - url: //api.buildarium.com
+    description: Live server
+  - url: //test.buildarium.com
+    description: Test server
+info:
+  title: "bdapi (Buildarium API)"
+  version: "1.0.0"
+  contact:
+    name: Buck Tower
+    email: buck@buildarium.com
+    url: https://buildarium.com/
+tags:
+  - name: Kits
+    description: Kit-related requests (bdapi-kits)
+paths:
+  /docs:
+    get:
+      operationId: getDocs
+      summary: View docs for Buildarium backend
+      tags: [ 'Metadata' ]
+      responses:
+        '200':
+          description: OK
+  /kit:
+    post:
+      summary: Register a kit (ready to be claimed)
+      operationId: registerKit
+      tags:
+        - Kits
+      security:
+        - bearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/Kit'
+      responses:
+        '200':
+          description: Successfully registered a kit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Kit'
+  /kit/{kitToken}':
+    put:
+      summary: Claim a kit using its token
+      operationId: claimKit
+      tags:
+        - Kits
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: kitToken
+          in: path
+          description: Token of the kit to claim
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Successfully claimed kit
+  /kit/id/{kitId}:
+    get:
+      summary: Get a kit's details from it's unique id
+      operationId: getKitById
+      tags:
+        - Kits
+      parameters:
+        - name: kitId
+          in: path
+          description: ID of the kit to see info on
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully queried kit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Kit'
+  /kit/me:
+    get:
+      summary: See your claimed kits
+      operationId: getMyKits
+      tags:
+        - Kits
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successfully queried your kits
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    description: UID of owner (you)
+                    type: string
+                  kits:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Kit'
+  /kit/user/{userId}:
+    get:
+      summary: See someone else's claimed kits
+      operationId: getKitByUser
+      tags:
+        - Kits
+      parameters:
+        - name: userId
+          in: path
+          description: User ID for which you want to query kits
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully queried another's kits
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    description: UID of owner
+                    type: string
+                  kits:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Kit'
+
+components:
+  schemas:
+    Kit:
+      type: object
+      required:
+        - uid
+        - token
+        - type
+      properties:
+        uid:
+          description: UID given to Kit
+          type: string
+          example: "d12a231fs5"
+        token:
+          description: Random token used once to claim a kit
+          type: string
+          example: "j21uju31gudxd"
+        type:
+          description: Type of build
+          type: string
+          example: "homestead"
+
+  requestBodies:
+    Kit:
+      content:
+        application/json:
+          schema:
+            allOf:
+              - description: Kit
+              - $ref: '#/components/schemas/Kit'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      
