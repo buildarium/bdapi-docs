@@ -1,17 +1,15 @@
 # bdapi-docs
 
-> Buildarium Static Splash Site
+> Buildarium OpenAPI Documentation
 
-![Version](https://img.shields.io/badge/version-1.0.0-black.svg?longCache=true&style=flat-square)
-[![Docker Cloud](https://img.shields.io/docker/cloud/build/buildarium/bdweb-static.svg)](https://cloud.docker.com/u/buildarium/repository/docker/buildarium/bdweb-static)
-<!-- [![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m781258374-4099c727e3e333d16b40f870.svg?style=flat-square)](https://status.indie.casa) -->
-<!-- [![Deployment](https://img.shields.io/badge/deployment-gcloud-1B9CE2.svg?longCache=true&style=flat-square)](http://cloud.google.com/) -->
+![Version](https://img.shields.io/github/tag/buildarium/bdapi-docs.svg)
+[![Build Status](http://build.bucktower.net:8080/buildStatus/icon?job=buildarium%2Fbdapi-docs%2Fdevelop)](http://build.bucktower.net:8080/job/buildarium/job/bdapi-docs/job/develop/)
+[![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m781258374-4099c727e3e333d16b40f870.svg?style=flat-square)](https://status.indie.casa)
 
 [![Slack Channel](https://img.shields.io/badge/chat-on%20slack-%233D133D.svg?longCache=true&style=flat-square)](https://buildarium.slack.com/app_redirect?channel=bdweb)
-[![Email](https://img.shields.io/badge/email-buck-blue.svg?longCache=true&style=flat-square)](mailto:buck@buildarium.com)
 ![Maintenance](https://img.shields.io/maintenance/yes/2019.svg?style=flat-square)
 
-![Screenshot](https://i.imgur.com/IjCNEBU.png)
+![Screenshot](https://i.imgur.com/5niRvOR.png)
 
 ---
 
@@ -35,7 +33,6 @@
   - [Deployment](#deployment)
     - [Development Ecosystem](#development-ecosystem)
     - [Testing Ecosystem](#testing-ecosystem)
-    - [Staging Ecosystem](#staging-ecosystem)
     - [Production Ecosystem](#production-ecosystem)
   - [Team](#team)
   - [FAQ](#faq)
@@ -48,7 +45,7 @@
 
 ### Clone
 
-- Clone this repo to your local machine using `git@github.com:buildarium/bdweb-app.git`
+- Clone this repo to your local machine using `git@github.com:buildarium/bdapi-docs.git`
 
 ### Setup
 
@@ -74,13 +71,14 @@ $ git checkout [BRANCH]
 
 ## Features
 
-- Hopefully SEO optimized
-- Provide single place for splash for Buildarium
+- Autogen UI for browsing OpenAPI YAML using [Redoc](https://github.com/Rebilly/ReDoc)
+- Provide single place for docs for Buildarium API
 
 ## Documentation
 
-*WIP*
-<!-- Found [here](https://icapi-network-dot-indiecasa-core.appspot.com/docs) -->
+All documentation should be done in `bdapi-openapi.yaml`.
+
+It will be automatically rendered to `http://localhost:5203`.
 
 ## Tests
 
@@ -196,7 +194,7 @@ This will start build all necessary Docker images and start up any Docker contai
 
 **Additionally, `docker-compose.yml` will automatically expose local ports for testing, and will mount the local code into the Docker container for hot reloads.**
 
-*All you need to do is write code and test (hot reloading is enabled). You can view the running container at `http://localhost:5200`.*
+*All you need to do is write code and test (hot reloading is enabled). You can view the running container at `http://localhost:5203`.*
 
 ### Testing Ecosystem
 
@@ -208,9 +206,9 @@ To ensure successful deployment to the Testing Ecosystem:
 
 - Ensure the Dockerfile still builds a usable image
 
-*You can view the running container at `http://test.buildarium.com`.*
+*You can view the running container at `http://test.buildarium.com:5203`.*
 
-### Staging Ecosystem
+<!-- ### Staging Ecosystem
 
 Deployment to Staging is triggered manually with containers built from the  `release-*` branch.
 
@@ -219,7 +217,7 @@ To prepare for the Staging Ecosystem, it is a good idea to:
 - All unit, integration, and e2e tests are passing
 - Ensure new features are properly covered by appropriate tests
 - Provide proper documentation for new features in the official docs
-- Ensure new code abides by the style guide
+- Ensure new code abides by the style guide -->
 
 ### Production Ecosystem
 
