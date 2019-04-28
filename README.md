@@ -4,7 +4,7 @@
 
 ![Version](https://img.shields.io/github/tag/buildarium/bdapi-docs.svg)
 [![Build Status](http://build.bucktower.net:8080/buildStatus/icon?job=buildarium%2Fbdapi-docs%2Fdevelop)](http://build.bucktower.net:8080/job/buildarium/job/bdapi-docs/job/develop/)
-[![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m781258374-4099c727e3e333d16b40f870.svg)](https://status.indie.casa)
+[![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m782541049-791b9841b3427856888416ea.svg)](https://status.buildarium.com)
 
 [![Slack Channel](https://img.shields.io/badge/chat-on%20slack-%233D133D.svg?longCache=true)](https://buildarium.slack.com/app_redirect?channel=bdweb)
 ![Maintenance](https://img.shields.io/maintenance/yes/2019.svg)
