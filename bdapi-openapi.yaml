@@ -14,6 +14,8 @@ info:
 tags:
   - name: Kits
     description: Kit-related requests (bdapi-kits)
+  - name: Auth
+    description: Authorization and account-related requests (bdapi-auth)
 paths:
   /docs:
     get:
@@ -129,6 +131,210 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Kit'
+  /auth/id/{userId}:
+    get:
+      summary: Get some user's info
+      operationId: getOtherUserInfo
+      tags:
+        - Auth
+      parameters:
+        - name: userId
+          in: path
+          description: User UID for which you want to query info
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully queried another's user info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  uid:
+                    description: UID of user
+                    type: string
+                  username:
+                    description: Username of user
+                    type: string
+                  firstName:
+                    description: First name of user
+                  lastName:
+                    description: Last name of user
+                  lastLoginDate:
+                    description: Last login date of user
+  /auth/signup:
+    post:
+      summary: Sign up a user
+      operationId: registerUser
+      tags:
+        - Auth
+      requestBody:
+        $ref: '#/components/requestBodies/NewUser'
+      responses:
+        '200':
+          description: Successfully registered a new user. Email confirmation will be sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewUser'
+  /auth/signin:
+    post:
+      summary: Sign in a user
+      operationId: signInUser
+      tags:
+        - Auth
+      requestBody:
+        $ref: '#/components/requestBodies/NewUser'
+      responses:
+        '200':
+          description: Successfully signed in as a user
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: bab264d6-ab4c-4a6d-a48c-619b6a5c53c1
+                description: Token to save for future requests
+  /auth/signout:
+    delete:
+      summary: Sign out a user
+      operationId: signOutUser
+      tags:
+        - Auth
+      parameters:
+        - in: header
+          name: Authorization
+          description: Authorization token
+          example: bab264d6-ab4c-4a6d-a48c-619b6a5c53c1
+          schema:
+            type: string
+            format: uuid
+            required: true
+      responses:
+        '200':
+          description: Successfully signed out as a user
+  /auth/uid:
+    get:
+      summary: Get UID of user based on Auth Token
+      operationId: verifyUIDUser
+      tags:
+        - Auth
+      parameters:
+        - in: header
+          name: Authorization
+          description: Authorization token
+          example: bab264d6-ab4c-4a6d-a48c-619b6a5c53c1
+          schema:
+            type: string
+            format: uuid
+            required: true
+      responses:
+        '200':
+          description: Successfully got user id from auth token
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: bab264d6-ab4c-4a6d-a48c-619b6a5c53c1
+                description: User's UID (yes, it is a similar format to token)
+  /auth/me:
+    get:
+      summary: Get your user info
+      operationId: getMyInfo
+      tags:
+        - Auth
+      parameters:
+        - in: header
+          name: Authorization
+          description: Authorization token
+          example: bab264d6-ab4c-4a6d-a48c-619b6a5c53c1
+          schema:
+            type: string
+            format: uuid
+            required: true
+      responses:
+        '200':
+          description: Successfully got user id from auth token (password is nulled for right now)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewUser'
+    put:
+      summary: Set your user info
+      operationId: setMyInfo
+      tags:
+        - Auth
+      parameters:
+        - in: header
+          name: Authorization
+          description: Authorization token
+          example: bab264d6-ab4c-4a6d-a48c-619b6a5c53c1
+          schema:
+            type: string
+            format: uuid
+            required: true
+      responses:
+        '200':
+          description: Successfully set user info
+  /auth/forgot:
+    post:
+      summary: Trigger reset password email
+      operationId: triggerForgotPassword
+      tags:
+        - Auth
+      parameters:
+        - in: header
+          name: Email
+          description: Email for the account whose password you want to reset
+          example: johnsmith@google.com
+          schema:
+            type: string
+            required: true
+      responses:
+        '200':
+          description: Successfully sent password reset email with special reset link
+  /auth/forgot/{forgotToken}:
+    put:
+      summary: Get your user info
+      operationId: resetForgotPassword
+      tags:
+        - Auth
+      parameters:
+        - in: path
+          name: forgotToken
+          description: Token to use to verify it is you, the email holder, who is resetting password
+          example: XxHOD6RBUkqTvEwDJOs02
+          schema:
+            type: string
+            required: true
+        - in: header
+          name: Password
+          description: New password to reset to
+          example: tHis1s@horriblepass123
+          schema:
+            type: string
+            required: true
+      responses:
+        '200':
+          description: Successfully reset password
+  /auth/email/{confirmToken}:
+    put:
+      summary: Get your user info
+      operationId: resetForgotPassword
+      tags:
+        - Auth
+      parameters:
+        - in: path
+          name: confirmToken
+          description: Token to use to verify your email, which was sent via email to the address
+          example: XxHOD6RBUkqTvEwDJOs02
+          schema:
+            type: string
+            required: true
+      responses:
+        '200':
+          description: Successfully verified email
 
 components:
   schemas:
@@ -151,6 +357,35 @@ components:
           description: Type of build
           type: string
           example: "homestead"
+    NewUser:
+      type: object
+      required:
+        - email
+        - password
+        - username
+        - firstName
+        - lastName
+      properties:
+        email:
+          description: Email of new user
+          type: string
+          example: "johnsmith@google.com"
+        password:
+          description: Password of new user
+          type: string
+          example: "doabetterpasswordThANTH1S!"
+        username:
+          description: Username of new user
+          type: string
+          example: "bucktower"
+        firstName:
+          description: First name of user
+          type: string
+          example: "Buck"
+        lastName:
+          description: Last name of user
+          type: string
+          example: "Tower"
 
   requestBodies:
     Kit:
@@ -160,6 +395,13 @@ components:
             allOf:
               - description: Kit
               - $ref: '#/components/schemas/Kit'
+    NewUser:
+      content:
+        application/json:
+          schema:
+            allOf:
+              - description: NewUser
+              - $ref: '#/components/schemas/NewUser'
   securitySchemes:
     bearerAuth:
       type: http
