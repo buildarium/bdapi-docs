@@ -178,7 +178,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NewUser'
+                $ref: '#/components/schemas/BasicUser'
   /auth/signin:
     post:
       summary: Sign in a user
@@ -191,11 +191,16 @@ paths:
         '200':
           description: Successfully signed in as a user
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
-                example: bab264d6-ab4c-4a6d-a48c-619b6a5c53c1
-                description: Token to save for future requests
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: Token to save for future requests
+                    example: bab264d6-ab4c-4a6d-a48c-619b6a5c53c1
+                  user:
+                    $ref: '#/components/schemas/BasicUser'
   /auth/signout:
     delete:
       summary: Sign out a user
@@ -369,7 +374,7 @@ components:
         email:
           description: Email of new user
           type: string
-          example: "johnsmith@google.com"
+          example: johnsmith@google.com
         password:
           description: Password of new user
           type: string
@@ -386,6 +391,29 @@ components:
           description: Last name of user
           type: string
           example: "Tower"
+    BasicUser:
+      type: object
+      properties:
+        uid:
+          description: UID of some user
+          type: string
+          example: 55e75017-9fb2-47a3-9ae3-fbb2010998bc
+        email:
+          description: Email of some user
+          type: string
+          example: johnsmith@google.com
+        username:
+          description: Username of some user
+          type: string
+          example: bucktower
+        firstName:
+          description: First name of some user
+          type: string
+          example: Buck
+        lastName:
+          description: Last name of some user
+          type: string
+          example: Tower
 
   requestBodies:
     Kit:
