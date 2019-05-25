@@ -186,7 +186,7 @@ paths:
       tags:
         - Auth
       requestBody:
-        $ref: '#/components/requestBodies/NewUser'
+        $ref: '#/components/requestBodies/SignInUser'
       responses:
         '200':
           description: Successfully signed in as a user
@@ -201,6 +201,10 @@ paths:
                     example: bab264d6-ab4c-4a6d-a48c-619b6a5c53c1
                   user:
                     $ref: '#/components/schemas/BasicUser'
+                  expiration:
+                    type: string
+                    description: The timestamp this token will expire
+                    example: 2019-06-14T06:11:23.829608
   /auth/signout:
     delete:
       summary: Sign out a user
@@ -414,6 +418,17 @@ components:
           description: Last name of some user
           type: string
           example: Tower
+    SignInUser:
+      type: object
+      properties:
+        username:
+          description: Username of the user
+          type: string
+          example: bucktower
+        password:
+          description: Password of the user
+          type: string
+          example: "doabetterpasswordThANTH1S!"
 
   requestBodies:
     Kit:
@@ -430,6 +445,13 @@ components:
             allOf:
               - description: NewUser
               - $ref: '#/components/schemas/NewUser'
+    SignInUser:
+      content:
+        application/json:
+          schema:
+            allOf:
+              - description: SignInUser
+              - $ref: '#/components/schemas/SignInUser'
   securitySchemes:
     bearerAuth:
       type: http
